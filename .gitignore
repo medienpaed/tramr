@@ -1,7 +1,8 @@
-auth.py
 __pycache__/
 flaskenv/
+.gitignore
 .DS_Store
+auth.py
 Pipfile
 Pipfile.lock
 _datenstruktur.txt
