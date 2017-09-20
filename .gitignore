@@ -1,0 +1,7 @@
+auth.py
+__pycache__/
+flaskenv/
+.DS_Store
+Pipfile
+Pipfile.lock
+_datenstruktur.txt
