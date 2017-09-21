@@ -17,8 +17,8 @@ anzeige = "0.0"
 # defining
 API_ENDPOINT = "https://api.opentransportdata.swiss/trias"
 
-DistanzLochergut = 210.0
-DistanzSihlpost = 420.0
+DistanzLochergut = 200.0
+DistanzSihlpost = 390.0
 
 Sihlpost = '8591367'
 Lochergut = '8591259'
