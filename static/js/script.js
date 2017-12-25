@@ -1,7 +1,7 @@
 var intervall = 100;
 var counter = 0;
-var red = 256;
-var green = 256;
+var red = 255;
+var green = 255;
 var hex = '11'
 
 function fancyTimeFormat(time)
@@ -23,24 +23,25 @@ function fancyTimeFormat(time)
 
 $(document).ready(function() {
     var zeit = parseFloat($("#anzeige").text());
-    var factor = zeit/256;
-    $('#button').hide();
+    $('body').css('background-color', '#00ff00');
     if (zeit == 9999) {
       $('#anzeige').text('...erst morgen frueh wieder verfuegbar. :-)');
     } else {
       counter = setInterval(function(){
         zeit = zeit - 0.1;
         if (zeit < 0) {
-          $('#anzeige').hide();
-          $('#button').show();
+          location.reload();
+          zeit = 999;
         } else {
-          red = 256 - (Math.round(Math.round(zeit)/factor));
-          green = 256 - red;
-          hexred = ('00' + red.toString(16).toUpperCase()).slice(-2);
-          hexgreen = ('00' + green.toString(16).toUpperCase()).slice(-2);
-          colstring = '#'+hexred+hexgreen+'00';
+          if (zeit < 255) {
+            red = 255 - Math.round(zeit);
+            green = 255 - red;
+            hexred = ('00' + red.toString(16).toUpperCase()).slice(-2);
+            hexgreen = ('00' + green.toString(16).toUpperCase()).slice(-2);
+            colstring = '#'+hexred+hexgreen+'00';
+            $('body').css('background-color', colstring);
+          }
           $('#anzeige').text(fancyTimeFormat(zeit));
-          $('body').css('background-color', colstring);
         }
       },intervall);
     }
