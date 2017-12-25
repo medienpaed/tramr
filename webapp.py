@@ -81,12 +81,16 @@ def nexttram(zeit,ort,wohin):
 @app.route('/lochergut')
 def zeit_lochergut():
     anzeige = str(nexttram(DistanzLochergut,Lochergut,Klusplatz))
-    return render_template('index.html', anzeige=anzeige)
+    return render_template('tramr.html', anzeige=anzeige, titel='Lochergut')
 
 @app.route('/sihlpost')
 def zeit_sihlpost():
     anzeige = str(nexttram(DistanzSihlpost,Sihlpost,Albisrieden))
-    return render_template('index.html', anzeige=anzeige)
+    return render_template('tramr.html', anzeige=anzeige, Titel='Sihlpost')
+
+@app.route('/')
+def web_start():
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run()
