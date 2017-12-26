@@ -21,6 +21,25 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="static/js/bootstrap.min.js"></script>
+    <script>
+
+      $(document).ready(function(){
+        $('#go_halt').click(function(){
+          haltsearch('#haltestelle','#result');
+        });
+      });
+
+      function haltsearch(string_id,result_id) {
+          $.post('/abfrage', {
+              haltstring: $(string_id).val()
+          }).done(function(daten) {
+              $(result_id).text(daten['text']);
+          }).fail(function() {
+              $(result_id).text("Error");
+          });
+
+      }
+    </script>
 
   </head>
 
@@ -42,40 +61,41 @@
 				<div class="col-sm-5">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <label for="haltestelle">Gib hier Deine Haltestelle ein:</label>
-              <div class="input-group">
-                <input type="text" class="form-control" id="haltestelle" placeholder="z.B. Hinterguggisberg Post">
-              </div>
+              <form>
+                <label for="haltestelle">Gib hier Deine Haltestelle ein:</label>
+                <div class="input-group">
+                  <input type="text" class="form-control input-lg" id="haltestelle" placeholder="z.B. Hinterguggisberg Post">
+                </div>
+                <button type="button" class="btn btn-default" id="go_halt">go</button>
+              </form>
             </div>
 
-            {% for halt in testausgabe %}
-            <div class="panel-body">{{ halt.1 }}</div>
-            {% endfor %}
+            <div class="panel-body" id="result"></div>
           </div>
  			 	</div><!--col-->
 
         <div class="col-sm-5">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <label for="haltestelle">Was ist die Endhaltestelle?</label>
+              <label for="ziel">Was ist die Endhaltestelle?</label>
               <div class="input-group">
-                <input type="text" class="form-control" id="ziel" placeholder="z.B. Niedertupfikon Heumatt">
+                <input type="text" class="form-control input-lg" id="ziel" placeholder="z.B. Niedertupfikon Heumatt">
               </div>
             </div>
-<!--
-            {% for halt in testausgabe %}
-            <div class="panel-body">{{ halt.1 }}</div>
-            {% endfor %}-->
+<!--      {% for halt in testausgabe %}
+            <div class="panel-body"></div>
+          {% endfor %}-->
           </div>
         </div>
 
         <div class="col-sm-2">
           <div class="panel panel-default">
             <div class="panel-heading">
-              <label for="haltestelle">Wegzeit (Min.):</label>
+              <label for="zeit">Wegzeit (Min.):</label>
               <div class="input-group">
-                <input type="text" class="form-control" id="zeit" placeholder="3:45">
+                <input type="text" class="form-control input-lg" id="zeit" placeholder="3:45">
               </div>
+              {{ausgabe_start}}
             </div>
           </div>
         </div><!--col-->

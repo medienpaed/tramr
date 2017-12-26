@@ -8,7 +8,7 @@ import sqlite3
 from auth import *
 from datetime import datetime
 from datetime import timedelta
-from flask import Flask, render_template, g
+from flask import Flask, render_template, g, request, jsonify
 
 app = Flask(__name__)
 
@@ -27,8 +27,6 @@ Sihlpost = '8591367'
 Lochergut = '8591259'
 Klusplatz = '8591233'
 Albisrieden = '8591036'
-
-query = '%sihl%'
 
 headers = {'Content-Type': 'application/xml',
            'Authorization': auth
@@ -99,6 +97,15 @@ def id2halt(haltnummer):
     haltname = query_db('select * from Bahnhof where StationID = ?', [haltnummer], one=True)
     return haltname[1]
 
+def haltsearch(query):
+    halt = query_db('select * from Bahnhof where Station LIKE ?', [query], one=False)
+    return halt
+
+@app.route('/abfrage', methods=['POST'])
+def abfrage():
+    result = haltsearch(request.form['haltstring'])
+    return jsonify({'text':'haltstring'})
+
 @app.route('/<halt_id>/<ziel_id>/<int:zeit>')
 def zeit_ausgabe(halt_id, ziel_id, zeit):
     anzeige = str(nexttram(zeit,halt_id,ziel_id))
@@ -117,8 +124,7 @@ def zeit_sihlpost():
 
 @app.route('/')
 def web_start():
-    halt = query_db('select * from Bahnhof where Station LIKE ?', [query], one=False)
-    return render_template('index.html',testausgabe=halt)
+    return render_template('index.html',ausgabe_start='')
 
 if __name__ == '__main__':
     app.run()
