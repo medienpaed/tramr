@@ -29,8 +29,7 @@
 
       <div class="jumbotron">
         <h1>Hello TramR!</h1>
-        <p>Mit TramR bist Du immer p&uuml;nktlich am Tram.</p>
-        <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a></p>
+        <p>Nie. Mehr. Rennen. :-)</p>
       </div>
 
       <div class="row">
@@ -40,16 +39,46 @@
 			</div>
 
       <div class="row">
-				<div class="col-sm-8">
-          <label for="haltestelle">Gib hier Deine Haltestelle ein:</label>
-          <div class="input-group">
-            <input type="text" class="form-control" id="haltestelle" placeholder="z.B. Hinterguggisberg Post">
-          </div>
- 			 	</div>
+				<div class="col-sm-5">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <label for="haltestelle">Gib hier Deine Haltestelle ein:</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="haltestelle" placeholder="z.B. Hinterguggisberg Post">
+              </div>
+            </div>
 
-		   	<div class="col-sm-4">
+            {% for halt in testausgabe %}
+            <div class="panel-body">{{ halt.1 }}</div>
+            {% endfor %}
+          </div>
+ 			 	</div><!--col-->
+
+        <div class="col-sm-5">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <label for="haltestelle">Was ist die Endhaltestelle?</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="ziel" placeholder="z.B. Niedertupfikon Heumatt">
+              </div>
+            </div>
+<!--
+            {% for halt in testausgabe %}
+            <div class="panel-body">{{ halt.1 }}</div>
+            {% endfor %}-->
+          </div>
         </div>
-      </div>
+
+        <div class="col-sm-2">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <label for="haltestelle">Wegzeit (Min.):</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="zeit" placeholder="3:45">
+              </div>
+            </div>
+          </div>
+        </div><!--col-->
 
     </div><!--container-->
   </body>
