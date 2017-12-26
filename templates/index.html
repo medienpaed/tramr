@@ -22,18 +22,25 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="static/js/bootstrap.min.js"></script>
     <script>
+      var delay = (function(){
+        var timer = 0;
+        return function(callback, ms){
+          clearTimeout (timer);
+          timer = setTimeout(callback, ms);
+        };
+      })();
 
       $(document).ready(function(){
-        $('#haltestelle').keypress(function (e) {
-          if (e.which == 13) {
-            haltsearch('#haltestelle','#result','result_halt');
-            return false;
-          }
+        $('#haltestelle').keyup(function() {
+            delay(function(){
+              haltsearch('#haltestelle','#result_halt','result_halt');
+            }, 400 );
         });
-        $('#go_halt').click(function(){
-          haltsearch('#haltestelle','#result','result_halt');
+        $('#ziel').keyup(function() {
+            delay(function(){
+              haltsearch('#ziel','#result_ziel','result_ziel');
+            }, 400 );
         });
-
       });
 
       function haltsearch(string_id,result_id,result_class) {
@@ -43,7 +50,7 @@
               $('.'+result_class).remove();
               $.each(daten,function(i,item){
                   item.forEach(function(element){
-                    $('#result_halt').append('<div class="panel-body '+result_class+'" >'+element[1]+'</div>');
+                    $(result_id).append('<div class="panel-body '+result_class+'" >'+element[1]+'</div>');
                   });
               });
           }).fail(function() {
@@ -78,7 +85,6 @@
                 <div class="input-group">
                   <input type="text" class="form-control input-lg" id="haltestelle" placeholder="z.B. Hinterguggisberg Post">
                 </div>
-                <button type="button" class="btn btn-default" id="go_halt">go</button>
               </form>
             </div>
 
