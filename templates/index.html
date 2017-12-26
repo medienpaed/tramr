@@ -41,6 +41,13 @@
               haltsearch('#ziel','#result_ziel','result_ziel');
             }, 400 );
         });
+
+      });
+
+      $(document).delegate('.result_halt', 'click', function(){
+        //var auswahl = $this().attr('data-id');
+        alert('hey');
+        $('.result_halt').remove();
       });
 
       function haltsearch(string_id,result_id,result_class) {
@@ -50,7 +57,7 @@
               $('.'+result_class).remove();
               $.each(daten,function(i,item){
                   item.forEach(function(element){
-                    $(result_id).append('<div class="panel-body '+result_class+'" >'+element[1]+'</div>');
+                    $(result_id).append('<div class="panel-body '+result_class+'"  data-id="'+element[0]+'">'+element[1]+'</div>');
                   });
               });
           }).fail(function() {
@@ -66,7 +73,7 @@
     <div class="container">
 
       <div class="jumbotron">
-        <h1>Hello TramR!</h1>
+        <h1 id="test">Hello TramR!</h1>
         <p>Nie. Mehr. Rennen. :-)</p>
       </div>
 
