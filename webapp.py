@@ -9,6 +9,7 @@ from auth import *
 from datetime import datetime
 from datetime import timedelta
 from flask import Flask, render_template, g, request, jsonify
+import sys
 
 app = Flask(__name__)
 
@@ -99,12 +100,13 @@ def id2halt(haltnummer):
 
 def haltsearch(query):
     halt = query_db('select * from Bahnhof where Station LIKE ?', [query], one=False)
+#    print(len(halt), file=sys.stderr)
     return halt
 
 @app.route('/abfrage', methods=['POST'])
 def abfrage():
     result = haltsearch(request.form['haltstring'])
-    return jsonify({'text':'haltstring'})
+    return jsonify(results = result)
 
 @app.route('/<halt_id>/<ziel_id>/<int:zeit>')
 def zeit_ausgabe(halt_id, ziel_id, zeit):
@@ -124,7 +126,8 @@ def zeit_sihlpost():
 
 @app.route('/')
 def web_start():
-    return render_template('index.html',ausgabe_start='')
+    ausgabe=haltsearch('%sihl%')
+    return render_template('index.html',ausgabe=ausgabe)
 
 if __name__ == '__main__':
     app.run()
