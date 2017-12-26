@@ -4,17 +4,20 @@
 # importing the requests library
 import requests
 import xml.etree.ElementTree as ET
+import sqlite3
 from auth import *
 from datetime import datetime
 from datetime import timedelta
-from flask import Flask, render_template
+from flask import Flask, render_template, g
 
 app = Flask(__name__)
-anzeige = "0.0"
 
-# import json
+DATABASE = 'database.db'
 
 # defining
+
+anzeige = "0.0"
+
 API_ENDPOINT = "https://api.opentransportdata.swiss/trias"
 
 DistanzLochergut = 200.0
@@ -25,11 +28,25 @@ Lochergut = '8591259'
 Klusplatz = '8591233'
 Albisrieden = '8591036'
 
+query = '%sihl%'
+
 headers = {'Content-Type': 'application/xml',
            'Authorization': auth
            }
 
 # Functions
+
+def get_db():
+    db = getattr(g, '_database', None)
+    if db is None:
+        db = g._database = sqlite3.connect(DATABASE)
+    return db
+
+def query_db(query, args=(), one=False):
+    cur = get_db().execute(query, args)
+    rv = cur.fetchall()
+    cur.close()
+    return (rv[0] if rv else None) if one else rv
 
 def makexml(id):
     # data to be sent to api
@@ -61,7 +78,7 @@ def uhr(str):
     return ergebnis
 
 def nexttram(zeit,ort,wohin):
-    naechstes = 999.0
+    naechstes = 9999.0
     # sending post request and saving response as response object
     r = requests.post(url = API_ENDPOINT, data = makexml(ort), headers = headers)
     # extracting response text und Umwandlung in Baum
@@ -78,6 +95,16 @@ def nexttram(zeit,ort,wohin):
             a=a+1
     return naechstes
 
+def id2halt(haltnummer):
+    haltname = query_db('select * from Bahnhof where StationID = ?', [haltnummer], one=True)
+    return haltname[1]
+
+@app.route('/<halt_id>/<ziel_id>/<int:zeit>')
+def zeit_ausgabe(halt_id, ziel_id, zeit):
+    anzeige = str(nexttram(zeit,halt_id,ziel_id))
+    titelstring = id2halt(halt_id).split('$')[0]
+    return render_template('tramr.html', anzeige=anzeige, titel=titelstring)
+
 @app.route('/lochergut')
 def zeit_lochergut():
     anzeige = str(nexttram(DistanzLochergut,Lochergut,Klusplatz))
@@ -90,7 +117,14 @@ def zeit_sihlpost():
 
 @app.route('/')
 def web_start():
-    return render_template('index.html')
+    halt = query_db('select * from Bahnhof where Station LIKE ?', [query], one=False)
+    return render_template('index.html',testausgabe=halt)
 
 if __name__ == '__main__':
     app.run()
+
+@app.teardown_appcontext
+def close_connection(exception):
+    db = getattr(g, '_database', None)
+    if db is not None:
+        db.close()
