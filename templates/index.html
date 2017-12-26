@@ -24,16 +24,28 @@
     <script>
 
       $(document).ready(function(){
-        $('#go_halt').click(function(){
-          haltsearch('#haltestelle','#result');
+        $('#haltestelle').keypress(function (e) {
+          if (e.which == 13) {
+            haltsearch('#haltestelle','#result','result_halt');
+            return false;
+          }
         });
+        $('#go_halt').click(function(){
+          haltsearch('#haltestelle','#result','result_halt');
+        });
+
       });
 
-      function haltsearch(string_id,result_id) {
+      function haltsearch(string_id,result_id,result_class) {
           $.post('/abfrage', {
-              haltstring: $(string_id).val()
+              haltstring: '%'+$(string_id).val()+'%'
           }).done(function(daten) {
-              $(result_id).text(daten['text']);
+              $('.'+result_class).remove();
+              $.each(daten,function(i,item){
+                  item.forEach(function(element){
+                    $('#result_halt').append('<div class="panel-body '+result_class+'" >'+element[1]+'</div>');
+                  });
+              });
           }).fail(function() {
               $(result_id).text("Error");
           });
@@ -59,8 +71,8 @@
 
       <div class="row">
 				<div class="col-sm-5">
-          <div class="panel panel-default">
-            <div class="panel-heading">
+          <div class="panel panel-info" id="result_halt">
+            <div class="panel-heading" >
               <form>
                 <label for="haltestelle">Gib hier Deine Haltestelle ein:</label>
                 <div class="input-group">
@@ -70,21 +82,18 @@
               </form>
             </div>
 
-            <div class="panel-body" id="result"></div>
           </div>
  			 	</div><!--col-->
 
         <div class="col-sm-5">
-          <div class="panel panel-default">
+          <div class="panel panel-default" id="result_ziel">
             <div class="panel-heading">
               <label for="ziel">Was ist die Endhaltestelle?</label>
               <div class="input-group">
                 <input type="text" class="form-control input-lg" id="ziel" placeholder="z.B. Niedertupfikon Heumatt">
               </div>
             </div>
-<!--      {% for halt in testausgabe %}
-            <div class="panel-body"></div>
-          {% endfor %}-->
+
           </div>
         </div>
 
@@ -95,7 +104,6 @@
               <div class="input-group">
                 <input type="text" class="form-control input-lg" id="zeit" placeholder="3:45">
               </div>
-              {{ausgabe_start}}
             </div>
           </div>
         </div><!--col-->
