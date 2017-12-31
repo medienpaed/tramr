@@ -99,7 +99,7 @@ def id2halt(haltnummer):
     return haltname[1]
 
 def haltsearch(query):
-    halt = query_db('select * from Bahnhof where Station LIKE ?', [query], one=False)
+    halt = query_db('select * from Bahnhof where Station LIKE ? LIMIT 10', [query], one=False)
 #    print(len(halt), file=sys.stderr)
     return halt
 
@@ -111,7 +111,7 @@ def abfrage():
 @app.route('/<halt_id>/<ziel_id>/<int:zeit>')
 def zeit_ausgabe(halt_id, ziel_id, zeit):
     anzeige = str(nexttram(zeit,halt_id,ziel_id))
-    titelstring = id2halt(halt_id).split('$')[0]
+    titelstring = id2halt(halt_id).split('$')[0]+' nach '+id2halt(ziel_id).split('$')[0]
     return render_template('tramr.html', anzeige=anzeige, titel=titelstring)
 
 @app.route('/lochergut')
