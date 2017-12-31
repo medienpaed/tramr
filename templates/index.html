@@ -21,51 +21,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="static/js/bootstrap.min.js"></script>
-    <script>
-      var delay = (function(){
-        var timer = 0;
-        return function(callback, ms){
-          clearTimeout (timer);
-          timer = setTimeout(callback, ms);
-        };
-      })();
-
-      $(document).ready(function(){
-        $('#haltestelle').keyup(function() {
-            delay(function(){
-              haltsearch('#haltestelle','#result_halt','result_halt');
-            }, 400 );
-        });
-        $('#ziel').keyup(function() {
-            delay(function(){
-              haltsearch('#ziel','#result_ziel','result_ziel');
-            }, 400 );
-        });
-
-      });
-
-      $(document).delegate('.result_halt', 'click', function(){
-        //var auswahl = $this().attr('data-id');
-        alert('hey');
-        $('.result_halt').remove();
-      });
-
-      function haltsearch(string_id,result_id,result_class) {
-          $.post('/abfrage', {
-              haltstring: '%'+$(string_id).val()+'%'
-          }).done(function(daten) {
-              $('.'+result_class).remove();
-              $.each(daten,function(i,item){
-                  item.forEach(function(element){
-                    $(result_id).append('<div class="panel-body '+result_class+'"  data-id="'+element[0]+'">'+element[1]+'</div>');
-                  });
-              });
-          }).fail(function() {
-              $(result_id).text("Error");
-          });
-
-      }
-    </script>
+    <script src="static/js/script_index.js"></script>
 
   </head>
 
@@ -85,41 +41,103 @@
 
       <div class="row">
 				<div class="col-sm-5">
-          <div class="panel panel-info" id="result_halt">
+          <div class="panel panel-info" id="bereich_halt">
             <div class="panel-heading" >
-              <form>
-                <label for="haltestelle">Gib hier Deine Haltestelle ein:</label>
-                <div class="input-group">
-                  <input type="text" class="form-control input-lg" id="haltestelle" placeholder="z.B. Hinterguggisberg Post">
-                </div>
-              </form>
+              <label for="haltestelle">Gib hier Deine Haltestelle ein:</label>
+              <div class="input-group">
+                <input type="text" class="form-control input-lg" id="haltestelle" placeholder="z.B. Hinterguggisberg Post">
+              </div>
             </div>
+            <div class="panel-body result_halt" dataid="0" id="rh1"></div>
+            <div class="panel-body result_halt" dataid="0" id="rh2"></div>
+            <div class="panel-body result_halt" dataid="0" id="rh3"></div>
+            <div class="panel-body result_halt" dataid="0" id="rh4"></div>
+            <div class="panel-body result_halt" dataid="0" id="rh5"></div>
+            <div class="panel-body result_halt" dataid="0" id="rh6"></div>
+            <div class="panel-body result_halt" dataid="0" id="rh7"></div>
+            <div class="panel-body result_halt" dataid="0" id="rh8"></div>
+            <div class="panel-body result_halt" dataid="0" id="rh9"></div>
+            <div class="panel-body result_halt" dataid="0" id="rh10"></div>
 
           </div>
  			 	</div><!--col-->
 
         <div class="col-sm-5">
-          <div class="panel panel-default" id="result_ziel">
+          <div class="panel panel-default" id="bereich_ziel">
             <div class="panel-heading">
               <label for="ziel">Was ist die Endhaltestelle?</label>
               <div class="input-group">
                 <input type="text" class="form-control input-lg" id="ziel" placeholder="z.B. Niedertupfikon Heumatt">
               </div>
             </div>
+            <div class="panel-body result_ziel" dataid="0" id="rz1"></div>
+            <div class="panel-body result_ziel" dataid="0" id="rz2"></div>
+            <div class="panel-body result_ziel" dataid="0" id="rz3"></div>
+            <div class="panel-body result_ziel" dataid="0" id="rz4"></div>
+            <div class="panel-body result_ziel" dataid="0" id="rz5"></div>
+            <div class="panel-body result_ziel" dataid="0" id="rz6"></div>
+            <div class="panel-body result_ziel" dataid="0" id="rz7"></div>
+            <div class="panel-body result_ziel" dataid="0" id="rz8"></div>
+            <div class="panel-body result_ziel" dataid="0" id="rz9"></div>
+            <div class="panel-body result_ziel" dataid="0" id="rz10"></div>
 
           </div>
         </div>
 
         <div class="col-sm-2">
-          <div class="panel panel-default">
+          <div class="panel panel-default" id="bereich_zeit">
             <div class="panel-heading">
               <label for="zeit">Wegzeit (Min.):</label>
               <div class="input-group">
-                <input type="text" class="form-control input-lg" id="zeit" placeholder="3:45">
+                <select class="form-control input-lg" id="zeit">
+                  <option class="result_zeit">0:30</option>
+                  <option class="result_zeit">1:00</option>
+                  <option class="result_zeit">1:30</option>
+                  <option class="result_zeit">2:00</option>
+                  <option class="result_zeit">2:30</option>
+                  <option class="result_zeit">3:00</option>
+                  <option class="result_zeit">3:30</option>
+                  <option class="result_zeit">4:00</option>
+                  <option class="result_zeit">4:30</option>
+                  <option class="result_zeit">5:00</option>
+                  <option class="result_zeit">5:30</option>
+                  <option class="result_zeit">6:00</option>
+                  <option class="result_zeit">6:30</option>
+                  <option class="result_zeit">7:00</option>
+                  <option class="result_zeit">7:30</option>
+                  <option class="result_zeit">8:00</option>
+                  <option class="result_zeit">8:30</option>
+                  <option class="result_zeit">9:00</option>
+                  <option class="result_zeit">9:30</option>
+                </select>
+                <!--input type="text" class="form-control input-lg"  placeholder="3:45"-->
               </div>
             </div>
           </div>
         </div><!--col-->
+
+      </div><!--row-->
+
+      <div class="row">
+        <div class="col-sm-12">
+
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="panel panel-default" id="bereich_output">
+            <div class="panel-heading">
+              <label for="output">...und hier entsteht Deine TramR-URL:</label>
+              <form class="form-inline">
+                <div class="input-group col-sm-11">
+                  <input class="form-control input-lg" type="text" id="output" placeholder="URL" readonly>
+                </div>
+                <button type="button" class="btn btn-lg btn-success" id="go">go!</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
 
     </div><!--container-->
   </body>
